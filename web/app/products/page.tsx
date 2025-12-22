@@ -1,7 +1,16 @@
 import { getProducts } from "@/lib/api";
 
-export default async function ProductsPage() {
-    const products = await getProducts();
+interface ProductPageProps {
+    searchParams: {
+        category?: string;
+        search?: string;
+        sort?: string;
+    }
+}
+
+export default async function ProductsPage({searchParams}: ProductPageProps) {
+    const products = await getProducts(searchParams);
+
     return(
         <main>
             <h1>Products Page</h1>
