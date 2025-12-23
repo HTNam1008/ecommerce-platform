@@ -13,11 +13,15 @@ export default function CheckoutButton() {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ items }),
+                body: JSON.stringify({
+                    items,
+                    userId: null,
+                }),
             }
         );
 
         const data = await res.json();
+        console.log("Checkout response:", data);
         window.location.href = data.url;
     }
 

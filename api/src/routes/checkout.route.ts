@@ -1,5 +1,6 @@
 import express from 'express';
 import Stripe from 'stripe';
+import Order from '../models/order.model';
 
 const checkoutRouter= express.Router();
 
@@ -7,8 +8,12 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 checkoutRouter.post("/", async (req, res) => {
     try {
-        const {items} = req.body;
-        console.log(items);
+        const {items, userId} = req.body;
+
+        // const totalAmount = items.reduce(
+        //     (sum: number, item: any) => sum + item.price * item.quantity,
+        // );
+
         const lineItems = items.map((item: any) => ({
             price_data: {
                 currency: "usd",
@@ -27,7 +32,12 @@ checkoutRouter.post("/", async (req, res) => {
             mode: "payment",
             success_url: `${process.env.CLIENT_URL}/checkout/success`,
             cancel_url: `${process.env.CLIENT_URL}/cart`,
+             metadata: {
+                userId: userId ?? "",
+                items: JSON.stringify(items),
+            },
         });
+
         res.json({ url: session.url });
     } catch (error) {
         res.status(500).json({ message: "Stripe checkout session creation failed" });
