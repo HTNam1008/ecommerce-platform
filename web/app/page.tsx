@@ -1,3 +1,4 @@
+import GoogleLoginButton from "@/components/GoogleLoginButton";
 import Link from "next/link";
 
 export default function Home() {
@@ -7,6 +8,8 @@ export default function Home() {
       <Link href="/products">
         Go to Products
       </Link>
+
+      <GoogleLoginButton />
     </main>
   )
 }
