@@ -1,8 +1,11 @@
 "use client";
 
+import { useAuthStore } from "@/store/authStore";
 import { GoogleLogin } from "@react-oauth/google";
 
-export default async function GoogleLoginButton() {
+export default function GoogleLoginButton() {
+    const login = useAuthStore((state) => state.login);
+
     const handleSuccess = async (credentialResponse: any) => {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/google`,
             {
@@ -15,9 +18,7 @@ export default async function GoogleLoginButton() {
         );
 
         const data = await res.json();
-
-        localStorage.setItem("token", data.token);
-        console.log("User info:", data.user);
+        login(data.user, data.token);
     };
     return <GoogleLogin onSuccess={handleSuccess}></GoogleLogin>
 };

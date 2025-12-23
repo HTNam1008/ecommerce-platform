@@ -8,8 +8,6 @@ export default function Home() {
       <Link href="/products">
         Go to Products
       </Link>
-
-      <GoogleLoginButton />
     </main>
   )
 }

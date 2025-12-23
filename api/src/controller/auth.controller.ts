@@ -39,6 +39,7 @@ export const authController = async (req: Request, res: Response) => {
 
     return res.json({ token: jwtToken, user });
   } catch (error) {
+    console.error("Auth error:", error);
     return res.status(500).json({ message: "Auth error" });
   }
 };
