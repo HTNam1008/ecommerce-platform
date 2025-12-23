@@ -1,5 +1,6 @@
 "use client"
 
+import CheckoutButton from "@/components/CheckoutButton";
 import { useCartStore, useCartTotal } from "@/store/cartStore";
 
 export default function CartPage() {
@@ -30,7 +31,7 @@ export default function CartPage() {
                 </div>
             ))}
             <h2>Total: ${total}</h2>
-
+            <CheckoutButton />
         </div>
     )
 }
