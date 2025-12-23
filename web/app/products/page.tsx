@@ -1,3 +1,5 @@
+import AddToCartButton from "@/components/AddToCartButton";
+import ProductCard from "@/components/ProductCard";
 import { getProducts } from "@/lib/api";
 
 interface ProductPageProps {
@@ -8,21 +10,17 @@ interface ProductPageProps {
     }
 }
 
-export default async function ProductsPage({searchParams}: ProductPageProps) {
+export default async function ProductsPage({ searchParams }: ProductPageProps) {
     const products = await getProducts(searchParams);
 
-    return(
-        <main>
-            <h1>Products Page</h1>
-
-            <ul>
-                {products.map((product) =>(
-                    <li key={product._id}>
-                        <h3>{product.name}</h3>
-                        <p>${product.price}</p>
-                    </li>
-                ))}
-            </ul>
-        </main>
-    )
+    return (
+        <div className="grid grid-cols-3 gap-6">
+            {products.map(product => (
+                <ProductCard
+                    key={product._id}
+                    product={product}
+                />
+            ))}
+        </div>
+    );
 }
