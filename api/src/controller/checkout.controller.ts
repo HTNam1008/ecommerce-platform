@@ -1,12 +1,13 @@
 import { Request, Response } from "express";
 import Stripe from "stripe";
+import { AuthRequest } from "../middleware/auth";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
-export const checkoutController = async (req: Request, res: Response) => {
+export const checkoutController = async (req: AuthRequest, res: Response) => {
     try {
-        const {items, userId} = req.body;
-
+        const {items} = req.body;
+        const userId = req.user?.userId;
         // const totalAmount = items.reduce(
         //     (sum: number, item: any) => sum + item.price * item.quantity,
         // );

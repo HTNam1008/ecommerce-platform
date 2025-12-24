@@ -1,28 +1,21 @@
 "use client";
 
+import { checkout } from "@/lib/api";
+import { useAuthStore } from "@/store/authStore";
 import { useCartStore } from "@/store/cartStore";
 
 export default function CheckoutButton() {
     const items = useCartStore(state => state.items);
+    const token = useAuthStore(state => state.token);
 
     const handleCheckout = async () => {
-        const res = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/api/checkout`,
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    items,
-                    userId: null,
-                }),
-            }
-        );
-
-        const data = await res.json();
-        console.log("Checkout response:", data);
-        window.location.href = data.url;
+        const url = await checkout(items, token);
+        if (!url) {
+            console.error("Checkout error:", url);
+            alert("Checkout failed. Please try again.");
+            return;
+        }
+        window.location.href = url;
     }
 
     return (
