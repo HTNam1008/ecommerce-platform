@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@ecommerce-platform/shared": ["packages/shared/src"]
+    }
+  }
+}

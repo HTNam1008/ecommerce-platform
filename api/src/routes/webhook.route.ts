@@ -1,5 +1,5 @@
 import express from 'express';
-import { webhookController } from '../controller/webhook.controller';
+import { webhookController } from '../controller/webhook.stripe.controller';
 
 const webhookRouter = express.Router();
 webhookRouter.post("/",express.raw({ type: "application/json" }), webhookController);

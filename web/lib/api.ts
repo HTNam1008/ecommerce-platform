@@ -1,5 +1,6 @@
 import { CartItem } from "@/types/cartItem.interface";
 import { Product } from "@/types/product";
+import { OrderItemRequest } from "@ecommerce-platform/shared";
 
 interface GetProductsParams {
   category?: string;
@@ -32,6 +33,11 @@ export async function getProducts(
 }
 
 export async function checkout(items: CartItem[], token: string | null) {
+  const itemsData: OrderItemRequest[] = items.map((item) => ({
+    productId: item._id,
+    quantity: item.quantity,
+  }));
+
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/checkout`, {
     method: "POST",
     headers: {
@@ -39,8 +45,7 @@ export async function checkout(items: CartItem[], token: string | null) {
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({
-      items,
-      userId: null,
+      items: itemsData,
     }),
   });
 
@@ -66,6 +71,6 @@ export async function googleLogin(token: string) {
       body: JSON.stringify({ token: token }),
     }
   );
-  
+
   return res;
 }

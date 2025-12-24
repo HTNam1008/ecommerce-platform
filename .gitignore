@@ -3,6 +3,8 @@
 # dependencies
 web/node_modules
 api/node_modules
+packages/shared/node_modules
+node_modules
 
 web/.pnp
 web/.pnp.*
@@ -21,6 +23,7 @@ web//out/
 
 # production
 web//build
+packages/shared/build
 
 # misc
 web/.DS_Store

@@ -1,0 +1,9 @@
+{
+  "name": "ecommerce-platform",
+  "private": true,
+  "workspaces": [
+    "web",
+    "api",
+    "packages/*"
+  ]
+}
