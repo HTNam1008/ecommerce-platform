@@ -1,55 +1,90 @@
 import { CartItem } from "@/types/cartItem.interface";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { useAuthStore } from "./authStore";
 
 interface CartState {
-    items: CartItem[];
-    addItem: (item: CartItem) => void;
-    removeItem: (id: string) => void;
-    updateQuantity: (id: string, quantity: number) => void;
-    clearCart: () => void;
+  carts: Record<string | 'guest', CartItem[]>;
+  setCart: (userId: string, items: CartItem[]) => void;
+  addItem: (userId: string, item: CartItem) => void;
+  removeItem: (userId: string, id: string) => void;
+  updateQuantity: (userId: string, id: string, quantity: number) => void;
+  clearCart: (userId: string) => void;
 }
 
-export const useCartStore = create<CartState>() (
-    persist(
-        (set, get) => ({
-            items: [],
+export const useCartStore = create<CartState>()(
+  persist(
+    (set, get) => ({
+      carts: {},
 
-            addItem: (item) =>{
-                const existingItem = get().items.find(i => i._id === item._id);
+      setCart: (userId, items) =>
+        set((state) => ({
+          carts: { ...state.carts, [userId]: items },
+        })),
 
-                if (existingItem) {
-                    set({
-                        // ...i = copy all existing properties of the item, then update quantity
-                        items: get().items.map(
-                            i => i._id === item._id ? { ...i, quantity: i.quantity + item.quantity } : i
-                        )
-                    });
-                } else {
-                    set({ items: [...get().items, item]});
-                }
-            },
+      addItem: (userId, item) => {
+        const cart = get().carts[userId] || [];
+        const existingItem = cart.find((i) => i._id === item._id);
 
-            removeItem: (id) => 
-                set({ items: get().items.filter(i => i._id !== id)}),
-            
-            updateQuantity: (id, quantity) =>
-                set({
-                    items: get().items.map(
-                        i => i._id === id ? { ...i, quantity } : i
-                    ),
-                }),
-            
-            clearCart: () => set({ items: [] }),
-        }),
-        {
-            name: "cart-storage"
+        let newCart;
+        if (existingItem) {
+          // ...i = copy all existing properties of the item, then update quantity
+          newCart = cart.map((i) =>
+            i._id === item._id
+              ? { ...i, quantity: i.quantity + item.quantity }
+              : i
+          );
+        } else {
+          newCart = [...cart, item];
         }
-    )
-)
+
+        set((state) => ({
+          carts: { ...state.carts, [userId]: newCart },
+        }));
+      },
+
+      removeItem: (userId, id) => {
+        const cart = get().carts[userId] || [];
+        let newCart;
+
+        newCart = cart.filter((i) => i._id !== id);
+
+        set((state) => ({
+          carts: { ...state.carts, [userId]: newCart },
+        }));
+      },
+      updateQuantity: (userId, id, quantity) => {
+        const cart = get().carts[userId] || [];
+        let newCart;
+
+        newCart = cart.map((i) => (i._id === id ? { ...i, quantity } : i));
+
+        set((state) => ({
+          carts: { ...state.carts, [userId]: newCart },
+        }));
+      },
+      clearCart: (userId) => set((state) => ({
+        carts: { ...state.carts, [userId]: [] },
+      })),
+    }),
+    {
+      name: "cart-storage",
+    }
+  )
+);
 
 export const useCartTotal = () => {
-    return useCartStore(state =>
-        state.items.reduce((total, item) => total + item.price * item.quantity, 0)
-    )
-}
+  const userId = useAuthStore(state => state.user?._id) || 'guest';
+  const carts = useCartStore(state => state.carts);
+
+  const currentCart = carts[userId] || [];
+  return currentCart.reduce((total, item) => total + item.price * item.quantity, 0);
+};
+
+export const useCurrentCart = () => {
+  const userId = useAuthStore(state => state.user?._id) || 'guest';
+  const carts = useCartStore(state => state.carts);
+
+  return carts[userId] || [];
+};
+

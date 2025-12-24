@@ -1,11 +1,18 @@
 "use client"
 
 import CheckoutButton from "@/components/CheckoutButton";
-import { useCartStore, useCartTotal } from "@/store/cartStore";
+import { useAuthStore } from "@/store/authStore";
+import { useCartStore, useCartTotal, useCurrentCart } from "@/store/cartStore";
 
 export default function CartPage() {
-    const { items, removeItem, updateQuantity, clearCart } = useCartStore();
+    const { removeItem, updateQuantity, clearCart } = useCartStore();
+    const items = useCurrentCart();
     const total = useCartTotal();
+    let userId = useAuthStore(state => state.user?._id);
+
+    if (!userId) {
+        userId = 'guest';
+    }
 
     return (
         <div>
@@ -18,14 +25,14 @@ export default function CartPage() {
                         type="number"
                         value={item.quantity}
                         min={1}
-                        onChange={e => updateQuantity(item._id, Number(e.target.value))}
+                        onChange={e => updateQuantity(userId, item._id, Number(e.target.value))}
                     />
 
-                    <button onClick={() => removeItem(item._id)}>
+                    <button onClick={() => removeItem(userId, item._id)}>
                         Remove
                     </button>
 
-                    <button onClick={() => clearCart()}>
+                    <button onClick={() => clearCart(userId)}>
                         Clear Cart
                     </button>
                 </div>

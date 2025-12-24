@@ -28,5 +28,13 @@ export const webhookController = async (req: Request, res: Response) => {
             )
         }
 
+        if (event.type === "checkout.session.expired" || event.type === "checkout.session.async_payment_failed") {
+            const session = event.data.object as Stripe.Checkout.Session;
+            await Order.findOneAndUpdate(
+                { stripeSessionId: session.id },
+                { status: "failed" }
+            )
+        }
+
         res.json({ received: true });
 }

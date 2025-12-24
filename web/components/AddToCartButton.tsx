@@ -1,13 +1,16 @@
 "use client"
 
+import { useAuthStore } from "@/store/authStore";
 import { useCartStore } from "@/store/cartStore";
 import { Product } from "@/types/product";
 
 export default function AddToCartButton({product} : {product : Product}) {
     const addItem = useCartStore(state => state.addItem);
+    const userId = useAuthStore(state => state.user?._id);
 
     const handleAdd = () => {
-        addItem({
+        addItem(
+            userId ?? 'guest',{
             _id: product._id,
             name: product.name,
             price: product.price,

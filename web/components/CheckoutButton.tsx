@@ -2,10 +2,10 @@
 
 import { checkout } from "@/lib/api";
 import { useAuthStore } from "@/store/authStore";
-import { useCartStore } from "@/store/cartStore";
+import { useCurrentCart } from "@/store/cartStore";
 
 export default function CheckoutButton() {
-    const items = useCartStore(state => state.items);
+    const items = useCurrentCart();
     const token = useAuthStore(state => state.token);
 
     const handleCheckout = async () => {
