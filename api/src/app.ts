@@ -5,6 +5,7 @@ import checkoutRouter from "./routes/checkout.route";
 import webhookRouter from "./routes/webhook.route";
 import authRouter from "./routes/auth.route";
 import { authMiddleware } from "./middleware/auth";
+import orderRouter from "./routes/order.route";
 
 const app = express();
 app.use(cors());
@@ -17,5 +18,5 @@ app.use("/api/auth", authRouter);
 
 app.use(authMiddleware);
 app.use("/api/checkout", checkoutRouter);
-
+app.use("/api/orders", orderRouter);
 export default app;

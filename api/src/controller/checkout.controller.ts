@@ -10,8 +10,8 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 export const checkoutController = async (req: AuthRequest, res: Response) => {
   try {
     const { items } = req.body;
-    const userId = req.user?.userId;
-
+    const userId = req.user?.id;
+    console.log("User ID:", userId);
     if (!items || items.length === 0) {
       return res.status(400).json({ message: "No items to checkout" });
     }

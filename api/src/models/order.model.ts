@@ -23,11 +23,11 @@ const OrderSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    // paymentIntentId: {
-    // type: String,
-    // required: true,
-    // unique: true,
-    // },
+
+    currency: {
+      type: String,
+      default: "USD",
+    },
 
     status: {
       type: String,
@@ -39,6 +39,11 @@ const OrderSchema = new mongoose.Schema(
       type: String,
       index: true,
     },
+
+    paymentIntentId: {
+      type: String,
+      index: true,
+    }
   },
   { timestamps: true }
 );
