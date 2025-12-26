@@ -29,13 +29,21 @@ export const authMiddleware = (
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as {
+    const decoded = jwt.verify(token, process.env.JWT_ACCESS_SECRET!) as {
       id: string;
     };
+
+    if (!decoded) {
+      return res.status(401).json({ message: "Invalid token" });
+    }
+
     console.log("Decoded token:", decoded);
-    req.user = decoded;
+    req.user = { id: decoded.id };
     next();
   } catch (error) {
+    if (error instanceof jwt.TokenExpiredError) {
+      return res.status(401).json({ message: "Token expired" });
+    }
     return res.status(401).json({ message: "Invalid token" });
   }
 };

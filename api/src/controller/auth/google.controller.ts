@@ -1,14 +1,14 @@
 import { Request, Response } from "express";
 import { OAuth2Client } from "google-auth-library";
-import User from "../models/user.model";
+import User from "../../models/user.model";
 import jwt from "jsonwebtoken";
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
-export const authController = async (req: Request, res: Response) => {
+export const googleController = async (req: Request, res: Response) => {
   try {
     const { token } = req.body;
-
+    
     const ticket = await client.verifyIdToken({
       idToken: token,
       audience: process.env.GOOGLE_CLIENT_ID,
@@ -21,7 +21,7 @@ export const authController = async (req: Request, res: Response) => {
     }
 
     const { sub, email, name, picture } = payload;
-
+    console.log("Google token payload:", { sub, email, name, picture });
     let user = await User.findOne({ googleId: sub });
 
     if (!user) {
@@ -33,18 +33,27 @@ export const authController = async (req: Request, res: Response) => {
       });
     }
 
-    const jwtToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET!, {
-      expiresIn: "7d",
-    });
+    const accessToken = jwt.sign(
+      { id: user._id },
+      process.env.JWT_ACCESS_SECRET!,
+      {
+        expiresIn: "1m",
+      }
+    );
 
-    res.cookie("accessToken", jwtToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    });
+    const refreshToken = jwt.sign(
+      { id: user._id },
+      process.env.JWT_REFRESH_SECRET!,
+      {
+        expiresIn: "2m",
+      }
+    );
 
-    return res.json({ accessToken: jwtToken, user });
+    return res.json({
+      accessToken: accessToken,
+      refreshToken: refreshToken,
+      user: user,
+    });
   } catch (error) {
     console.error("Auth error:", error);
     return res.status(500).json({ message: "Auth error" });

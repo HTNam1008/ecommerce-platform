@@ -7,13 +7,17 @@ export default function CheckoutButton() {
     const items = useCurrentCart();
 
     const handleCheckout = async () => {
-        const url = await checkout(items);
-        if (!url) {
-            console.error("Checkout error:", url);
+        try {
+            const url = await checkout(items);
+            if (!url) {
+                alert("Checkout failed. Please try again.");
+                return;
+            }
+            window.location.href = url;
+        } catch (error) {
+            console.error("Checkout failed:", error);
             alert("Checkout failed. Please try again.");
-            return;
         }
-        window.location.href = url;
     }
 
     return (

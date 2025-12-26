@@ -9,13 +9,14 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@ecommerce-platform/shared": "*",
     "@react-oauth/google": "^0.13.4",
     "@stripe/stripe-js": "^8.6.0",
+    "jose": "^6.1.3",
     "next": "16.1.0",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "zustand": "^5.0.9",
-    "@ecommerce-platform/shared": "*"
+    "zustand": "^5.0.9"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

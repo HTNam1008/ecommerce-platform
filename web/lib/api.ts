@@ -1,3 +1,4 @@
+import { refreshTokenAction } from "@/app/actions/auth";
 import { CartItem } from "@/types/cartItem.interface";
 import { Order } from "@/types/order.interface";
 import { Product } from "@/types/product.interface";
@@ -7,6 +8,33 @@ interface GetProductsParams {
   category?: string;
   search?: string;
   sort?: string;
+}
+
+async function fetchWithAuth(url: string, options: RequestInit = {}) {
+  const defaultOptions: RequestInit = {
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+      ...options.headers,
+    },
+    ...options,
+  };
+
+  let res = await fetch(url, defaultOptions);
+
+  if (res.status === 401) {
+    try {
+      await refreshTokenAction();
+
+      res = await fetch(url, defaultOptions);
+    } catch (error) {
+      if (typeof window !== "undefined") {
+        window.location.href = "/login";
+      }
+      throw error;
+    }
+  }
+  return res;
 }
 
 export async function getProducts(
@@ -39,16 +67,15 @@ export async function checkout(items: CartItem[]) {
     quantity: item.quantity,
   }));
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/checkout`, {
-    method: "POST",
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      items: itemsData,
-    }),
-  });
+  const res = await fetchWithAuth(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/checkout`,
+    {
+      method: "POST",
+      body: JSON.stringify({
+        items: itemsData,
+      }),
+    }
+  );
 
   console.log("Checkout response:", res);
 
@@ -57,36 +84,16 @@ export async function checkout(items: CartItem[]) {
   if (!res.ok) {
     console.error("Checkout error:", data);
     alert("Checkout failed. Please try again.");
-    return;
+    return null;
   }
 
   return data.url;
 }
 
-export async function googleLogin(token: string) {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/auth/google`,
-    {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ token: token }),
-    }
-  );
-
-  return res;
-}
-
-export async function getMyOrders(token: string | null) : Promise<{ orders: Order[] }> {
-  const res = await fetch(
+export async function getMyOrders(): Promise<{ orders: Order[] }> {
+  const res = await fetchWithAuth(
     `${process.env.NEXT_PUBLIC_API_URL}/api/orders`,
     {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
       cache: "no-store",
     }
   );
