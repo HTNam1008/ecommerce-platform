@@ -6,10 +6,11 @@ import webhookRouter from "./routes/webhook.route";
 import authRouter from "./routes/auth.route";
 import { authMiddleware } from "./middleware/auth";
 import orderRouter from "./routes/order.route";
+import cookieParser from "cookie-parser";
 
 const app = express();
-app.use(cors());
-
+app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+app.use(cookieParser());
 app.use("/api/webhook", webhookRouter);
 app.use(express.json());
 

@@ -2,7 +2,7 @@
 
 import { useAuthStore } from "@/store/authStore";
 import { useCartStore } from "@/store/cartStore";
-import { Product } from "@/types/product";
+import { Product } from "@/types/product.interface";
 
 export default function AddToCartButton({product} : {product : Product}) {
     const addItem = useCartStore(state => state.addItem);

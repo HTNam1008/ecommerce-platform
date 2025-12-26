@@ -1,5 +1,5 @@
 import AddToCartButton from "./AddToCartButton";
-import type { Product } from "@/types/product";
+import type { Product } from "@/types/product.interface";
 
 export default function ProductCard({ product }: { product: Product }) {
   return (

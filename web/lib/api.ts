@@ -1,5 +1,6 @@
 import { CartItem } from "@/types/cartItem.interface";
-import { Product } from "@/types/product";
+import { Order } from "@/types/order.interface";
+import { Product } from "@/types/product.interface";
 import { OrderItemRequest } from "@ecommerce-platform/shared";
 
 interface GetProductsParams {
@@ -32,7 +33,7 @@ export async function getProducts(
   return res.json();
 }
 
-export async function checkout(items: CartItem[], token: string | null) {
+export async function checkout(items: CartItem[]) {
   const itemsData: OrderItemRequest[] = items.map((item) => ({
     productId: item._id,
     quantity: item.quantity,
@@ -40,14 +41,16 @@ export async function checkout(items: CartItem[], token: string | null) {
 
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/checkout`, {
     method: "POST",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({
       items: itemsData,
     }),
   });
+
+  console.log("Checkout response:", res);
 
   const data = await res.json();
 
@@ -65,6 +68,7 @@ export async function googleLogin(token: string) {
     `${process.env.NEXT_PUBLIC_API_URL}/api/auth/google`,
     {
       method: "POST",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
@@ -73,4 +77,23 @@ export async function googleLogin(token: string) {
   );
 
   return res;
+}
+
+export async function getMyOrders(token: string | null) : Promise<{ orders: Order[] }> {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/orders`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      cache: "no-store",
+    }
+  );
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch orders");
+  }
+
+  return res.json();
 }

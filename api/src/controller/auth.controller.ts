@@ -37,7 +37,14 @@ export const authController = async (req: Request, res: Response) => {
       expiresIn: "7d",
     });
 
-    return res.json({ token: jwtToken, user });
+    res.cookie("accessToken", jwtToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    });
+
+    return res.json({ accessToken: jwtToken, user });
   } catch (error) {
     console.error("Auth error:", error);
     return res.status(500).json({ message: "Auth error" });

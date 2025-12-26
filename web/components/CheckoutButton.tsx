@@ -1,15 +1,13 @@
 "use client";
 
 import { checkout } from "@/lib/api";
-import { useAuthStore } from "@/store/authStore";
 import { useCurrentCart } from "@/store/cartStore";
 
 export default function CheckoutButton() {
     const items = useCurrentCart();
-    const token = useAuthStore(state => state.token);
 
     const handleCheckout = async () => {
-        const url = await checkout(items, token);
+        const url = await checkout(items);
         if (!url) {
             console.error("Checkout error:", url);
             alert("Checkout failed. Please try again.");
