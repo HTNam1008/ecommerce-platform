@@ -32,6 +32,7 @@ export async function proxy(req: NextRequest) {
   }
 
   if (refreshToken) {
+    console.log("Attempting to refresh access token using refresh token");
     try {
       const refreshRes = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/api/auth/refresh-token`,

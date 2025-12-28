@@ -6,6 +6,11 @@ export const myOrderController = async (req: AuthRequest, res: Response) => {
   const userId = req.user?.id;
 
   const orders = await Order.find({ userId }).sort({ createdAt: -1 });
+  if (!orders) {
+    return res.status(404).json({ message: "No orders found for this user" });
+  }
 
-  res.json(orders);
+  console.log(`Fetched ${orders.length} orders for user ID: ${userId}`);
+
+  res.json({ orders });
 };
