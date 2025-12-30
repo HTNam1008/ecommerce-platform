@@ -3,8 +3,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useAuthStore } from "@/store/authStore";
-import GoogleLoginButton from "./GoogleLoginButton";
-import LogoutButton from "./LogoutButton";
+import GoogleLoginButton from "../GoogleLoginButton";
+import LogoutButton from "../LogoutButton";
 import { useCartStore, useCurrentCart } from "@/store/cartStore";
 import { Container, Heart, LogIn, ShoppingCart } from "lucide-react";
 import SearchBarHeader from "./SearchBar.Header";
@@ -39,6 +39,7 @@ export default function Header() {
           <a href="/login" className="flex items-center justify-center text-black text-sm font-semibold">
             <LogIn className="mr-2"/>Login
           </a>
+          <GoogleLoginButton/>
         </div>
       </nav>
 
