@@ -1,52 +1,11 @@
-// "use client";
-
-// import Image from "next/image";
-// import type { Product } from "@/types/product.interface";
-// import { Heart, ShoppingBag } from "lucide-react";
-// import React from "react";
-
-// export default function ProductCard({ product }: { product: Product }) {
-//   const [favourite, setFavourite] = React.useState(false);
-
-//   return (
-//     <div>
-//       <div className="product-image relative rounded-2xl bg-gray-300 shadow-sm hover:shadow-md transition">
-//         <button className="absolute right-4 top-4 z-10 cursor-pointer rounded-full bg-white p-2 shadow"
-//           onClick={() => setFavourite(!favourite)}>
-//           <Heart className={`h-5 w-5 transition ${favourite ? "fill-red-500 text-red-500" : "text-gray-400"
-//             }`} />
-//         </button>
-//         <div className="relative aspect-square mx-auto w-full">
-//           <Image
-//             src={product.images[0]}
-//             alt={product.name}
-//             fill
-//             className="object-cover rounded-2xl" />
-//         </div>
-//       </div>
-//       <div className="product-detail cursor-pointer relative rounded-2xl bg-white shadow-sm hover:shadow-md transition">
-//         <h3 className="text-lg font-semibold text-black text-center line-clamp-1 pt-4 py-2">
-//           {product.name}
-//         </h3>
-
-//         <div className="flex justify-center pb-2">
-//           <span className="border p-2 inline-flex text-purple-600 font-semibold rounded-full items-center">
-//             <ShoppingBag className="mr-2" />
-//             ${product.price}
-//           </span>
-//         </div>
-//       </div>
-
-//     </div>
-//   );
-// }
 "use client";
 
 import Image from "next/image";
 import type { Product } from "@/types/product.interface";
-import { Heart, ShoppingBag, Star } from "lucide-react";
+import { Heart, Star } from "lucide-react";
 import React from "react";
 import Link from "next/link";
+import AddToCartButton from "./AddToCartButton";
 
 export default function ProductCard({ product }: { product: Product }) {
   const [favourite, setFavourite] = React.useState(false);
@@ -110,12 +69,7 @@ export default function ProductCard({ product }: { product: Product }) {
           <div className={`absolute bottom-0 left-0 right-0 transition-all duration-300 ${
             isHovered ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
           }`}>
-            <button className="w-full bg-gradient-to-r from-purple-600 to-blue-600 py-3 text-sm font-semibold text-white transition-all hover:from-purple-700 hover:to-blue-700">
-              <span className="flex items-center justify-center">
-                <ShoppingBag className="mr-2 h-4 w-4" />
-                Add to Cart
-              </span>
-            </button>
+            <AddToCartButton product={product} />
           </div>
         </div>
 

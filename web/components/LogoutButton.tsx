@@ -8,5 +8,5 @@ export default function LogoutButton() {
         logout();
         await logoutAction();
     };
-    return <button onClick={handleLogout}>Logout</button>;
+    return <button onClick={handleLogout} className="text-black font-bold">Logout</button>;
 }
