@@ -52,8 +52,8 @@ export async function proxy(req: NextRequest) {
 
         response.cookies.set("accessToken", newAccessToken, {
           httpOnly: true,
-          secure: process.env.NODE_ENV === "production",
-          sameSite: "lax",
+          secure: process.env.NODE_ENV === "production", 
+          sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
         });
 
         return response;

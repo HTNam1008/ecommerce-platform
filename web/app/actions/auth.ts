@@ -25,16 +25,16 @@ export async function loginWithGoogle(token: string) {
 
   cookieStore.set("accessToken", accessToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    path: "/",
+    secure: process.env.NODE_ENV === "production", 
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    path: process.env.NODE_ENV === "production" ? undefined : "localhost",
   });
 
   cookieStore.set("refreshToken", refreshToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    path: "/",
+    secure: process.env.NODE_ENV === "production", 
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    path: process.env.NODE_ENV === "production" ? undefined : "localhost",
   });
 
   return {user: user};
@@ -70,9 +70,9 @@ export async function refreshTokenAction() {
 
   cookieStore.set("accessToken", accessToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    path: "/",
+    secure: process.env.NODE_ENV === "production", 
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    path: process.env.NODE_ENV === "production" ? undefined : "localhost",
   });
   console.log("Token refreshed successfully");
   return true;
