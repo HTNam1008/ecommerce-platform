@@ -9,7 +9,7 @@ import orderRouter from "./routes/order.route";
 import cookieParser from "cookie-parser";
 
 const app = express();
-app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+app.use(cors({ origin: ["http://localhost:3000", "https://ecommerce-platform-web-drab.vercel.app"], credentials: true }));
 app.use("/api/webhook", webhookRouter);
 app.use(express.json());
 app.use(cookieParser());
