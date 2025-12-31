@@ -54,6 +54,8 @@ export async function proxy(req: NextRequest) {
           httpOnly: true,
           secure: process.env.NODE_ENV === "production", 
           sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+          domain: process.env.NODE_ENV === "production" ? ".shophub.studio" : undefined,
+          path: "/",
         });
 
         return response;

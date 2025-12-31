@@ -27,14 +27,16 @@ export async function loginWithGoogle(token: string) {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production", 
     sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-    path: process.env.NODE_ENV === "production" ? undefined : "localhost",
+    path: "/",
+    domain: process.env.NODE_ENV === "production" ? ".shophub.studio" : undefined,
   });
 
   cookieStore.set("refreshToken", refreshToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production", 
     sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-    path: process.env.NODE_ENV === "production" ? undefined : "localhost",
+    path: "/",
+    domain: process.env.NODE_ENV === "production" ? ".shophub.studio" : undefined,
   });
 
   return {user: user};
@@ -72,7 +74,8 @@ export async function refreshTokenAction() {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production", 
     sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-    path: process.env.NODE_ENV === "production" ? undefined : "localhost",
+    path: "/",
+    domain: process.env.NODE_ENV === "production" ? ".shophub.studio" : undefined,
   });
   console.log("Token refreshed successfully");
   return true;
