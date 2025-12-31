@@ -25,7 +25,7 @@ app.use(cookieParser());
 app.use("/api/products", productRouter);
 app.use("/api/auth", authRouter);
 
-app.use(authMiddleware);
-app.use("/api/checkout", checkoutRouter);
-app.use("/api/orders", orderRouter);
+// app.use(authMiddleware);
+app.use("/api/checkout", authMiddleware,checkoutRouter);
+app.use("/api/orders", authMiddleware, orderRouter);
 export default app;
