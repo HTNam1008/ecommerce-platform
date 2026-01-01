@@ -25,7 +25,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// app.options("*", cors(corsOptions));
+app.options("*", cors(corsOptions));
 
 app.use("/api/webhook", webhookRouter);
 app.use(express.json());
@@ -35,6 +35,6 @@ app.use("/api/products", productRouter);
 app.use("/api/auth", authRouter);
 
 // app.use(authMiddleware);
-app.use("/api/checkout", authMiddleware, checkoutRouter);
-app.use("/api/orders", authMiddleware, orderRouter);
+app.use("/api/checkout", checkoutRouter);
+app.use("/api/orders", orderRouter);
 export default app;
