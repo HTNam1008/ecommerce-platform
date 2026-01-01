@@ -67,8 +67,16 @@ export const checkoutController = async (req: AuthRequest, res: Response) => {
         })
       ),
       mode: "payment",
-      success_url: `${process.env.CLIENT_URL}/checkout/success`,
-      cancel_url: `${process.env.CLIENT_URL}/cart`,
+      success_url: `${
+        process.env.NODE_ENV === "production"
+          ? process.env.CLIENT_URL
+          : "http://localhost:3000"
+      }/checkout/success`,
+      cancel_url: `${
+        process.env.NODE_ENV === "production"
+          ? process.env.CLIENT_URL
+          : "http://localhost:3000"
+      }/cart`,
       metadata: {
         orderId: order._id.toString(),
       },
@@ -78,8 +86,6 @@ export const checkoutController = async (req: AuthRequest, res: Response) => {
 
     res.json({ url: session.url });
   } catch (error: any) {
-    res
-      .status(500)
-      .json({ message: error.toString() });
+    res.status(500).json({ message: error.toString() });
   }
 };

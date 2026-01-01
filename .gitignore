@@ -24,6 +24,7 @@ web//out/
 # production
 web//build
 packages/shared/build
+api/dist
 
 # misc
 web/.DS_Store
