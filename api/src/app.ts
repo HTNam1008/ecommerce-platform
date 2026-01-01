@@ -25,7 +25,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.options("*", cors(corsOptions));
+// app.options("*", cors(corsOptions));
 
 app.use("/api/webhook", webhookRouter);
 app.use(express.json());

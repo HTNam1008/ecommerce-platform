@@ -9,6 +9,13 @@ export const authMiddleware = (
   res: Response,
   next: NextFunction
 ) => {
+  if (req.method === "OPTIONS") {
+    console.log("OPTIONS preflight request - skipping auth middleware");
+    return next();
+  }
+
+  console.log("Auth middleware triggered");
+
   let token: string | undefined;
   // cookie priority over header
   if (req.cookies?.accessToken) {
