@@ -9,17 +9,28 @@ const product_route_1 = __importDefault(require("./routes/product.route"));
 const checkout_route_1 = __importDefault(require("./routes/checkout.route"));
 const webhook_route_1 = __importDefault(require("./routes/webhook.route"));
 const auth_route_1 = __importDefault(require("./routes/auth.route"));
-const auth_1 = require("./middleware/auth");
 const order_route_1 = __importDefault(require("./routes/order.route"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const app = (0, express_1.default)();
-app.use((0, cors_1.default)({ origin: ["http://localhost:3000", "https://ecommerce-platform-web-drab.vercel.app"], credentials: true }));
+const corsOptions = {
+    origin: ["http://localhost:3000", "https://app.shophub.studio"],
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "Cookie"],
+};
+app.use((0, cors_1.default)(corsOptions));
+app.use((req, res, next) => {
+    console.log(`${req.method} ${req.path}`);
+    console.log("Origin:", req.headers.origin);
+    console.log("Cookies:", req.cookies);
+    next();
+});
+app.options("*", (0, cors_1.default)(corsOptions));
 app.use("/api/webhook", webhook_route_1.default);
 app.use(express_1.default.json());
 app.use((0, cookie_parser_1.default)());
 app.use("/api/products", product_route_1.default);
 app.use("/api/auth", auth_route_1.default);
-app.use(auth_1.authMiddleware);
 app.use("/api/checkout", checkout_route_1.default);
 app.use("/api/orders", order_route_1.default);
 exports.default = app;

@@ -6,6 +6,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.authMiddleware = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const authMiddleware = (req, res, next) => {
+    if (req.method === "OPTIONS") {
+        console.log("OPTIONS preflight request - skipping auth middleware");
+        return next();
+    }
+    console.log("Auth middleware triggered");
     let token;
     if (req.cookies?.accessToken) {
         token = req.cookies.accessToken;
